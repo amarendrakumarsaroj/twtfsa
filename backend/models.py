@@ -1,6 +1,10 @@
 from config import db
 
 class Contact(db.Model):
+    #explicitly define the tablename
+    __tablename__ = 'contacts'
+    #explicitly define the tablename
+    
     id = db.Column(db.Interger, primary_ke=True)
     first_name = db.Column(db.String(80), unique=False, nullable=False)
     last_name = db.Column(db.String(80), unique=False, nullable=False)
