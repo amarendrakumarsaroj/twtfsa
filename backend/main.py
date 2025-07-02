@@ -29,6 +29,38 @@ def create_contacts():
         return jsonify({"error": str(e)}), 400
     return jsonify({"message": "User Created!"}), 201 
 
+#create bulk of contacts
+@app.route("/contacts/bulk", methods=["POST"])
+def create_bulk_contacts():
+    contacts_data = request.get_json()
+
+    if not isinstance(contacts_data, list):
+        return jsonify({"error": "Input must be a list of contact objects"}), 400
+
+    new_contacts = []
+    for contact in contacts_data:
+        first_name = contact.get("firstName")
+        last_name = contact.get("lastName")
+        email = contact.get("email")
+
+        if not first_name or not last_name or not email:
+            return (
+                jsonify({"error": "Each contact must include firstName, lastName, and email."}),
+                400,
+            )
+
+        new_contact = Contact(first_name=first_name, last_name=last_name, email=email)
+        new_contacts.append(new_contact)
+
+    try:
+        db.session.add_all(new_contacts)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 400
+
+    return jsonify({"message": f"{len(new_contacts)} contacts created successfully."}), 201
+
  # Update a contact
 @app.route("/update_contact/<int:user_id>", methods=["PATCH"])
 def update_contact(user_id):
