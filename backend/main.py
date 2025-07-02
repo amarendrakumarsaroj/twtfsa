@@ -14,10 +14,12 @@ def get_contacts(): #Valid any function name
 def create_contacts():
     first_name = request.json.get("firstName")
     last_name = request.json.get("lastName")
+    first_name = request.json.get("firstName")
+    last_name = request.json.get("lastName")
     email = request.json.get("email")
     if not first_name or not last_name or not email:
         return (
-            jsonify({"message": "You must include a first name , last name or email"}), 400,
+            jsonify({"error": "You must include a first name , last name and email. All three of them."}), 400,
         )
     new_contact = Contact(first_name=first_name, last_name=last_name, email=email)   
     try:
